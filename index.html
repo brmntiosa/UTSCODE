@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard Motor Sport</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f5f7fa;
+    }
+    header {
+      background-color: #1f2937;
+      color: white;
+      padding: 15px 30px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    footer {
+      background-color: #1f2937;
+      color: #ccc;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    .container {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: row;
+    }
+    .sidebar {
+      background-color: #374151;
+      color: white;
+      width: 220px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar a {
+      color: #d1d5db;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    .sidebar a:hover {
+      color: #60a5fa;
+    }
+    .content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+    .motor-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: flex-start;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .motor-item {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 250px;
+      padding: 15px;
+      transition: transform 0.2s;
+      text-align: center;
+    }
+    .motor-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+    .motor-item img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .motor-nama {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 6px;
+    }
+    .motor-merek {
+      font-size: 1rem;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    .motor-harga {
+      font-size: 1rem;
+      color: #e11d48;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>🏍️ Dashboard Motor Sport</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <a href="#">🏠 Dashboard</a>
+  
+  </aside>
+
+  <main class="content">
+    <h2>Daftar Motor Sport Terpopuler</h2>
+    <ul class="motor-list" id="motor-list"></ul>
+  </main>
+</div>
+
+<footer>
+  &copy; 2025 tio ganteng | All rights reserved
+</footer>
+
+<script>
+  // Ganti URL ini dengan IP backend kamu
+  const apiUrl = 'http://localhost:3000/api/motor';
+
+  async function fetchMotor() {
+    try {
+      const response = await fetch(apiUrl);
+      const motor = await response.json();
+
+      const motorList = document.getElementById('motor-list');
+      motorList.innerHTML = '';
+
+      motor.forEach(m => {
+        const li = document.createElement('li');
+        li.className = 'motor-item';
+        li.innerHTML = `
+          <img src="${m.gambar}" alt="${m.nama}" />
+          <div class="motor-nama">${m.nama}</div>
+          <div class="motor-merek">${m.merek}</div>
+          <div class="motor-harga">Rp${m.harga.toLocaleString('id-ID')}</div>
+        `;
+        motorList.appendChild(li);
+      });
+    } catch (error) {
+      console.error('Gagal mengambil data motor:', error);
+    }
+  }
+
+  fetchMotor();
+</script>
+
+</body>
+</html>
