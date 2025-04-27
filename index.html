@@ -1,154 +1,89 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Dashboard Motor Sport</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background-color: #f5f7fa;
-    }
-    header {
-      background-color: #1f2937;
-      color: white;
-      padding: 15px 30px;
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    footer {
-      background-color: #1f2937;
-      color: #ccc;
-      text-align: center;
-      padding: 10px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      font-size: 0.9rem;
-    }
-    .container {
-      display: flex;
-      min-height: 100vh;
-      flex-direction: row;
-    }
-    .sidebar {
-      background-color: #374151;
-      color: white;
-      width: 220px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .sidebar a {
-      color: #d1d5db;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-    .sidebar a:hover {
-      color: #60a5fa;
-    }
-    .content {
-      flex: 1;
-      padding: 30px;
-      overflow-y: auto;
-    }
-    .motor-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: flex-start;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .motor-item {
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 250px;
-      padding: 15px;
-      transition: transform 0.2s;
-      text-align: center;
-    }
-    .motor-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    }
-    .motor-item img {
-      max-width: 100%;
-      border-radius: 8px;
-      margin-bottom: 12px;
-    }
-    .motor-nama {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #111827;
-      margin-bottom: 6px;
-    }
-    .motor-merek {
-      font-size: 1rem;
-      color: #6b7280;
-      margin-bottom: 8px;
-    }
-    .motor-harga {
-      font-size: 1rem;
-      color: #e11d48;
-      font-weight: bold;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50 font-sans">
 
-<header>🏍️ Dashboard Motor Sport</header>
+  <!-- Header Navbar -->
+  <header class="bg-blue-900 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">MotoSport Dashboard</h1>
+      <nav>
+        <ul class="flex space-x-6">
+          <li><a href="#" class="hover:text-blue-300">Home</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-<div class="container">
-  <aside class="sidebar">
-    <a href="#">🏠 Dashboard</a>
-  
-  </aside>
+  <!-- Main Body -->
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-blue-800 text-white flex flex-col">
+      <div class="text-xl font-bold p-6 border-b border-blue-700">
+        MotoApps
+      </div>
+      <nav class="flex-1 p-4">
+        <ul>
+          <li class="mb-2">
+            <a href="#" class="block p-3 rounded hover:bg-blue-700">🏠 Dashboard</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
 
-  <main class="content">
-    <h2>Daftar Motor Sport Terpopuler</h2>
-    <ul class="motor-list" id="motor-list"></ul>
-  </main>
-</div>
+    <!-- Content -->
+    <main class="flex-1 p-8">
+      <h2 class="text-3xl font-bold mb-6 text-gray-800">Motor Sport Terpopuler</h2>
+      <div id="produk-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Card motor muncul disini -->
+      </div>
+    </main>
+  </div>
 
-<footer>
-  &copy; 2025 tio ganteng | All rights reserved
-</footer>
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white py-4 mt-8">
+    <div class="max-w-7xl mx-auto text-center text-sm">
+      &copy; 2025 MotoApps - Dibuat dengan ❤️ untuk UTS Cloud Computing
+    </div>
+  </footer>
 
-<script>
-  // Ganti URL ini dengan IP backend kamu
-  const apiUrl = 'http://localhost:3000/api/motor';
+  <!-- Fetch Data Motor -->
+  <script>
+    const apiUrl = 'http://13.239.121.11/api/motor'; // Ganti IP sesuai server kamu
 
-  async function fetchMotor() {
-    try {
-      const response = await fetch(apiUrl);
-      const motor = await response.json();
+    async function fetchMotor() {
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
 
-      const motorList = document.getElementById('motor-list');
-      motorList.innerHTML = '';
+        const list = document.getElementById('produk-list');
+        list.innerHTML = '';
 
-      motor.forEach(m => {
-        const li = document.createElement('li');
-        li.className = 'motor-item';
-        li.innerHTML = `
-          <img src="${m.gambar}" alt="${m.nama}" />
-          <div class="motor-nama">${m.nama}</div>
-          <div class="motor-merek">${m.merek}</div>
-          <div class="motor-harga">Rp${m.harga.toLocaleString('id-ID')}</div>
-        `;
-        motorList.appendChild(li);
-      });
-    } catch (error) {
-      console.error('Gagal mengambil data motor:', error);
+        data.forEach(motor => {
+          const card = document.createElement('div');
+          card.className = 'bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition duration-300';
+          card.innerHTML = `
+            <img src="${motor.gambar}" alt="${motor.nama}" class="h-48 w-full object-cover">
+            <div class="p-4">
+              <h3 class="text-xl font-semibold mb-2">${motor.nama}</h3>
+              <p class="text-gray-600 mb-1">Tahun: ${motor.tahun}</p>
+              <p class="text-blue-700 font-bold">Rp${parseInt(motor.harga).toLocaleString('id-ID')}</p>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Gagal fetch data:', error);
+      }
     }
-  }
 
-  fetchMotor();
-</script>
+    fetchMotor();
+  </script>
 
 </body>
 </html>

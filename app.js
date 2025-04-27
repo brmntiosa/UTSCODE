@@ -38,7 +38,7 @@ db.connect(err => {
 
 // Endpoint API motor
 app.get('/api/motor', (req, res) => {
-  const query = 'SELECT id, nama, merek, harga, size, gambar_key FROM motor';
+  const query = 'SELECT id, nama, merek, harga, tahun, gambar_key FROM motor';
 
   db.query(query, (err, results) => {
     if (err) {
@@ -50,7 +50,7 @@ app.get('/api/motor', (req, res) => {
       const gambarUrl = s3.getSignedUrl('getObject', {
         Bucket: bucketName,
         Key: item.gambar_key,
-        Expires: 3600 // 1 jam
+        Expires: 3600 // URL berlaku 1 jam
       });
 
       return {
@@ -58,7 +58,7 @@ app.get('/api/motor', (req, res) => {
         nama: item.nama,
         merek: item.merek,
         harga: item.harga,
-        size: item.size,
+        tahun: item.tahun,
         gambar: gambarUrl
       };
     });
