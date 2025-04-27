@@ -19,7 +19,6 @@ jobs:
         echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
-    Deploy Backend
     - name: Deploy to Backend EC2
       run: |
         ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.BE_HOST }} "
@@ -28,11 +27,15 @@ jobs:
           pm2 restart app || node app.js &
         "
 
-    Deploy Frontend (Pisah jalannya satu satu)
     - name: Pull latest frontend code
       run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.FE_HOST }} "cd /var/www/html && sudo git pull origin main"
+        ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.FE_HOST }} "
+          cd /var/www/html &&
+          sudo git pull origin main
+        "
 
     - name: Restart Apache server
       run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.FE_HOST }} "sudo systemctl restart httpd"
+        ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.FE_HOST }} "
+          sudo systemctl restart httpd
+        "
