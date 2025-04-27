@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy Fullstack App
 
 on:
   push:
@@ -10,27 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source code
+    - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Set up SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-
-    - name: Deploy to Backend EC2
+    - name: Deploy Backend to EC2
       run: |
         ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.BE_HOST }} "
-          cd UTSCODE && 
-          git pull origin main && 
+          if [ ! -d '~/UTSCODE/.git' ]; then
+            git clone https://github.com/brmntiosa/UTSCODE.git ~/UTSCODE
+          else
+            cd ~/UTSCODE
+            git pull origin main
+          fi
+          cd ~/UTSCODE
           pm2 restart app || node app.js &
         "
 
-    - name: Deploy to Frontend EC2
+    - name: Deploy Frontend to EC2
       run: |
         ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.FE_HOST }} "
-          cd /var/www/html && 
-          sudo git pull origin main &&
+          if [ ! -d '/var/www/html/.git' ]; then
+            sudo rm -rf /var/www/html/*
+            cd /var/www/html
+            sudo git clone https://github.com/brmntiosa/UTSCODE.git .
+            sudo rm -rf node_modules package-lock.json package.json README.md app.js
+          else
+            cd /var/www/html
+            sudo git pull origin main
+          fi
           sudo systemctl restart httpd
         "
