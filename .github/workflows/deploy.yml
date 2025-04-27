@@ -30,6 +30,7 @@ jobs:
     - name: Deploy to Frontend EC2
       run: |
         ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.FE_HOST }} "
+          ls
           cd /var/www/html && 
           sudo git pull origin main &&
           sudo systemctl restart httpd
