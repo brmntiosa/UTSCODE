@@ -25,10 +25,7 @@ jobs:
           cd UTSCODE && 
           git pull origin main && 
           pm2 restart app || node app.js &
-        "
-
-    - name: Deploy to Frontend EC2
-      run: |
+        
         ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.FE_HOST }} "
           cd /var/www/html && 
           sudo git pull origin main &&
